@@ -14,8 +14,10 @@ namespace Flyweight.Demonstration
     {
         static void Main(string[] args)
         {
+            //first, create the shape factory.
             ShapeObjectFactory sof = new ShapeObjectFactory();
 
+            //create some shapes (or get them if they already exist)
             IShape shape = sof.GetShape("Triangle");
             shape.Print();
             shape = sof.GetShape("Triangle");
@@ -29,6 +31,10 @@ namespace Flyweight.Demonstration
             shape.Print();
             shape = sof.GetShape("Square");
             shape.Print();
+            //result of all of that: Triangle and Square will print three times.
+            //BUT total objects are only two (one of each).
+            //ie, methods will run on the created objects, it just runs the methods
+            //on the version of the shape that already exists.
 
             int total = sof.TotalObjectsCreated;
             Console.WriteLine($"\n Number of objects created = {total}");
@@ -39,6 +45,7 @@ namespace Flyweight.Demonstration
     /// <summary>
     /// The 'Flyweight' interface
     /// </summary>
+    //This is THE flyweight.
     interface IShape
     {
         void Print();
@@ -47,6 +54,7 @@ namespace Flyweight.Demonstration
     /// <summary>
     /// A 'ConcreteFlyweight' class
     /// </summary>
+    //Inherits the flyweight.
     class Triangle : IShape
     {
         public void Print()
@@ -58,6 +66,7 @@ namespace Flyweight.Demonstration
     /// <summary>
     /// A 'ConcreteFlyweight' class
     /// </summary>
+    //Ditto.
     class Square : IShape
     {
         public void Print()
@@ -78,6 +87,11 @@ namespace Flyweight.Demonstration
             get { return shapes.Count; }
         }
 
+        //This is HOW the flyweight pattern operates.
+        //It checks the dictionary of shapes (created above)
+        //if the shape already exists, GetShape just returns that shape.
+        //if it doesn't, it will create a new instane of that shape
+        //and add it to the dictionary.
         public IShape GetShape(string ShapeName)
         {
             IShape shape = null;
@@ -106,3 +120,16 @@ namespace Flyweight.Demonstration
         }
     }
 }
+
+/*
+FLYWEIGHT PATTERN
+
+Uses sharing to support large numbers of fine-grained objects efficiently.
+
+Share existing objects instead of creating new ones. No explanation of 
+WHY/when we'd need to do that.
+
+In our example: We'll use Triangles and Squares (Shapes) we've already created.
+The pattern checks if a shape already exists. If so, use it. If not, create it.
+That's simple, but again... why/when? Is it a memory thing?
+*/
