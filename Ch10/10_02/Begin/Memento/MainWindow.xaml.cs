@@ -15,6 +15,8 @@ namespace Memento
     public partial class MainWindow : Window
     {
         // Create a caretaker that contains the collection
+        //of the statements we will track.
+        //We will be able to undo and redo the statements.
         Caretaker caretaker = new Caretaker();
 
         // The originator sets the value for the statement        
@@ -29,20 +31,25 @@ namespace Memento
             InitializeComponent();
         }
 
+        //the next few methods are what will do stuff.
+        //notably, undo and redo.
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
             string text = theStatement.Text;
 
-            originator.set(text);
+            originator.set(text); //pass the statement to the originator
 
-            caretaker.addMemento(originator.storeInMemento());
+            caretaker.addMemento(originator.storeInMemento()); //two things happening here:
+                //add the memento to Caretaker
+                //store the memento via the originator.
+                //I know I'm missing some details here...
 
             saveFiles++;
             currentStatement++;
 
             WriteLine("Saved files " + saveFiles + "\n");
 
-            btnUndo.IsEnabled = true;
+            btnUndo.IsEnabled = true; //turns on the button that will allow Undo
         }
 
         private void btnUndo_Click(object sender, RoutedEventArgs e)

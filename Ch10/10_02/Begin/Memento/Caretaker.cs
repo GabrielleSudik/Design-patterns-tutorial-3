@@ -10,7 +10,8 @@ namespace DemoMemento
     {
 
         // Where all mementos are saved
-
+        //Each memento is a statement. Here we just create a list of
+        //the statements/mementos.
         List<Memento> savedStatements = new List<Memento>();
 
         // Adds memento to the collection

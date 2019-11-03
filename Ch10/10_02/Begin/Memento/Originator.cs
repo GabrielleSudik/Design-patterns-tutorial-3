@@ -24,7 +24,9 @@ namespace DemoMemento
         }
 
         // Creates a new Memento with a new statement
-
+        //remember: the statement begins in the originator class.
+        //this method will pass the statement to the Memento class,
+        //so you have the statement and it's copy as a Memento property.
         public Memento storeInMemento()
         {
             WriteLine("From Originator: Saving to Memento");
@@ -32,7 +34,6 @@ namespace DemoMemento
         }
 
         // Gets the statement currently stored in memento
-
         public String restoreFromMemento(Memento memento)
         {
 
