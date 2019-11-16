@@ -22,12 +22,15 @@ namespace State.Demonstration
             // Open a new account
             Account account = new Account("Reynald Adolphe");
 
-            // Apply transacitons
+            // Apply transactions
             account.Deposit(490.0);
             account.Deposit(390.0);
-            account.Deposit(540.0);
+            account.Deposit(540.0); //will bump the state into Premium.
             account.PayInterest();
-            account.Withdraw(2200.0);
+            //note PayInterest will also run in StandardState.
+            //It just pays zero.
+            //It will do nothing at all in OverdrawnState.
+            account.Withdraw(2200.0); //bumps the state into Overdrawn.
             account.Withdraw(1300.0);
 
             // Wait
@@ -39,6 +42,8 @@ namespace State.Demonstration
     /// <summary>
     /// The 'State' abstract class
     /// </summary>
+    //It's like the base. All states will have these traits.
+    //They will just behave differently depending on the state.
     abstract class State
     {
         protected Account account;
@@ -78,6 +83,7 @@ namespace State.Demonstration
         private double _serviceFee;
 
         // Constructor
+        //Note it accepts a STATE
         public OverdrawnState(State state)
         {
             this.balance = state.Balance;
@@ -97,9 +103,11 @@ namespace State.Demonstration
         public override void Deposit(double amount)
         {
             balance += amount;
-            StateChangeCheck();
+            StateChangeCheck(); //checks whether the new balance will change the state.
         }
 
+        //one of the ways the behavior changes depending on state.
+        //no money = no withdrawals.
         public override void Withdraw(double amount)
         {
             amount = amount - _serviceFee;
@@ -113,6 +121,10 @@ namespace State.Demonstration
             // No interest is paid
         }
 
+        //the method that will change the state to "standard"
+        //IMO, I would have written code to check for not only standard but premium.
+        //I don't think prof's code does that, but it's a quibble.
+        //he actually does that with the other two states.
         private void StateChangeCheck()
         {
             if (balance > upperLimit)
@@ -170,6 +182,7 @@ namespace State.Demonstration
             StateChangeCheck();
         }
 
+        //again, checks if the state should change (and changes it if so).
         private void StateChangeCheck()
         {
             if (balance < lowerLimit)
@@ -230,6 +243,7 @@ namespace State.Demonstration
             StateChangeCheck();
         }
 
+        //change the state:
         private void StateChangeCheck()
         {
             if (balance < 0.0)
@@ -246,6 +260,9 @@ namespace State.Demonstration
     /// <summary>
     /// The 'Context' class
     /// </summary>
+    //How the account is created and its regular behaviors
+    //note they all apply to all states, although some states "block" them
+    //like, overdrawn does not allow Withdraw to occur.
     class Account
     {
         private State _state;
@@ -300,3 +317,17 @@ namespace State.Demonstration
         }
     }
 }
+
+/*
+
+STATE PATTERN:
+
+Allows an object to alter its behavior when its internal state changes.
+The object will appear to change its class.
+IE, pattern allows an object to change what it does based on its state.
+
+Our example will allow a bank account to behave differently
+depending on its balance. Overdrawn, standard, and premium.
+
+*/
+
